@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reveal Sdk - REST Data Sources</title>
+  </head>
+
+  <body>
+    <h2>Select Customer</h2>
+    <select id="customerSelect">
+      <option value="">Select a Customer ...</option>
+      <option value="ALFKI">ALFKI</option>
+      <option value="BLONP">BLONP</option>
+      <option value="AROUT">AROUT</option>
+    </select>
+    <p></p>
+
+    <div id="revealView" style="height: calc(100vh - 120px); width: 100%"></div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://unpkg.com/dayjs@1.8.21/dayjs.min.js"></script>
+    <script src="https://dl.revealbi.io/reveal/libs/1.7.1/infragistics.reveal.js"></script>
+
+    <script type="text/javascript">
+      //$.ig.RevealSdkSettings.setBaseUrl("https://localhost:7006/");
+      $.ig.RevealSdkSettings.setBaseUrl("http://localhost:7006/");
+
+      $.ig.RevealSdkSettings.setAdditionalHeadersProvider(function (url) {
+        return headers;
+      });
+
+      var headers = {};
+      var revealView = new $.ig.RevealView("#revealView");
+      revealView.startInEditMode = true;
+      revealView.onDataSourcesRequested = (callback) => {
+        const customerSelect = document.getElementById("customerSelect");
+        const selectedValue = customerSelect.value;
+
+        headers = selectedValue ? { "x-header-one": selectedValue } : {};
+        console.log(selectedValue);
+
+        const rst1 = new $.ig.RVRESTDataSource();
+        rst1.id = "Invoices";
+        rst1.title = "Customer Invoices";
+        rst1.subtitle = "CustomerId Parameter";
+        rst1.useAnonymousAuthentication = true;
+
+        const rst2 = new $.ig.RVRESTDataSource();
+        rst2.id = "SalesByCategory";
+        rst2.title = "Sales by Category";
+        rst2.subtitle = "JSON Endpoint";
+        rst2.useAnonymousAuthentication = true;
+
+        const rst3 = new $.ig.RVRESTDataSource();
+        rst3.id = "CustomerOrders";
+        rst3.title = "Customer Orders";
+        rst3.subtitle = "CustomerId Parameter";
+        rst3.useAnonymousAuthentication = true;
+
+        callback(new $.ig.RevealDataSources([rst1, rst2, rst3], [], false));
+      };
+    </script>
+  </body>
+</html>
