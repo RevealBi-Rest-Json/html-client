@@ -31,8 +31,11 @@
       });
 
       var headers = {};
+
+
       var revealView = new $.ig.RevealView("#revealView");
       revealView.startInEditMode = true;
+      
       revealView.onDataSourcesRequested = (callback) => {
         const customerSelect = document.getElementById("customerSelect");
         const selectedValue = customerSelect.value;
